@@ -13,6 +13,7 @@ use Yii;
  * @property string $refresh_token
  * @property int $expires
  * @property int $created_at
+ * @property int $updated_at
  *
  * @property MobileUser $user
  */
@@ -50,6 +51,7 @@ class Token extends \yii\db\ActiveRecord
             'refresh_token' => 'Refresh Token',
             'expires' => 'Expires',
             'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
         ];
     }
 

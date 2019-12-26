@@ -2,6 +2,8 @@
 
 /* @var $this yii\web\View */
 
+use app\models\MobileUser;
+
 $this->title = 'My Yii Application';
 ?>
 <div class="site-index">
@@ -10,5 +12,9 @@ $this->title = 'My Yii Application';
         <hr>
         <p style="text-align: left">login: <b>port</b></p>
         <p style="text-align: left">pass: <b>parol123</b></p>
+
+        <?php
+            echo mktime();
+        ?>
     </div>
 </div>

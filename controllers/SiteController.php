@@ -2,9 +2,15 @@
 
 namespace app\controllers;
 
+use app\models\AnnouncementService;
+use app\models\MobileUser;
 use app\models\SignupForm;
+use app\models\Statistic;
+use app\models\Token;
 use Yii;
+use yii\debug\panels\EventPanel;
 use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
@@ -138,5 +144,9 @@ class SiteController extends Controller
         return $this->render('signup', [
             'model' => $model,
         ]);
+    }
+
+    public function actionTest() {
+        return 'hui';
     }
 }

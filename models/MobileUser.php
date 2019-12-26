@@ -16,10 +16,13 @@ use yii\web\IdentityInterface;
  * @property string $company_name
  * @property string $company_description
  * @property string $invite
- * @property int $invited_by id пользователя который пригласил
+ * @property string $sms
+ * @property string $invited_by id пользователя который пригласил
  * @property int $balance
  * @property int $role_id
+ * @property int $status
  * @property int $statistics_id
+ * @property int $created_at
  * @property string $email
  *
  * @property City $city
@@ -60,13 +63,12 @@ class MobileUser extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return [
             [['first_name', 'last_name'], 'required'],
-            [['city_id', 'invited_by', 'balance', 'role_id', 'statistics_id'], 'integer'],
+            [['city_id', 'balance', 'role_id', 'status', 'statistics_id'], 'integer'],
             [['first_name', 'last_name', 'company_name'], 'string', 'max' => 25],
-            [['phone'], 'string', 'max' => 11],
+            [['phone'], 'string', 'max' => 13],
             [['company_description'], 'string', 'max' => 95],
             [['invite'], 'string', 'max' => 50],
             [['email'], 'string', 'max' => 30],
-            [['email'], 'unique'],
             [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
             [['role_id'], 'exist', 'skipOnError' => true, 'targetClass' => Role::className(), 'targetAttribute' => ['role_id' => 'id']],
         ];
@@ -91,6 +93,7 @@ class MobileUser extends \yii\db\ActiveRecord implements IdentityInterface
             'role_id' => 'Role ID',
             'statistics_id' => 'Statistics ID',
             'email' => 'Email',
+            'created_at' => 'Date',
         ];
     }
 
@@ -118,13 +121,25 @@ class MobileUser extends \yii\db\ActiveRecord implements IdentityInterface
         return $this->hasMany(Token::className(), ['user_id' => 'id']);
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getServices()
+    {
+        return $this->hasMany(Service::className(), ['id' => 'service_id'])
+            ->viaTable('user_service', ['user_id' => 'id']);
+    }
+
+
+
     public function setToken($id) {
         $model = new Token();
+
         $model->user_id = $id;
         $model->access_token = Yii::$app->security->generateRandomString();
         $model->refresh_token = Yii::$app->security->generateRandomString();
-        $model->expires = mktime(0, 0, 0, date("m") + 1);
-        $model->created_at = mktime();
+        $model->expires = time() + strtotime("+1 month");
+        $model->created_at = time();
         return $model->save();
     }
 
@@ -142,7 +157,14 @@ class MobileUser extends \yii\db\ActiveRecord implements IdentityInterface
         if ($model->expires < mktime()) {
             return Yii::$app->response->statusCode = "426";
         }
-
         return $model->user;
+    }
+
+    public function getRate() {
+        return $this->hasMany(Rate::className(), ['user_id' => 'id']);
+    }
+
+    public function getStatistic() {
+        return $this->hasOne(Statistic::className(), ['user_id' => 'id']);
     }
 }

@@ -5,10 +5,10 @@ namespace app\modules\admin\controllers;
 use Yii;
 use app\models\Service;
 use app\models\ServiceSearch;
-use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * ServiceController implements the CRUD actions for Service model.
@@ -25,23 +25,6 @@ class ServiceController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
-                ],
-            ],
-
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['*'],
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'actions' => ['login', 'signup'],
-                        'roles' => ['?'],
-                    ],
-                    [
-                        'allow' => true,
-                        'actions' => ['index'],
-                        'roles' => ['@'],
-                    ],
                 ],
             ],
         ];
@@ -84,8 +67,17 @@ class ServiceController extends Controller
     {
         $model = new Service();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+
+            if (UploadedFile::getInstance($model, 'logo'))
+            {
+                $model->image = UploadedFile::getInstance($model, 'logo');
+                $model->logo = $model->upload();
+            }
+
+            $model->save();
+
+            return $this->redirect(['service/index']);
         }
 
         return $this->render('create', [
@@ -104,7 +96,14 @@ class ServiceController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            if (UploadedFile::getInstance($model, 'logo'))
+            {
+                $model->image = UploadedFile::getInstance($model, 'logo');
+                $model->logo = $model->upload();
+            }
+            $model->save();
+
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -122,8 +121,12 @@ class ServiceController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
 
+        if ($model->logo != null)
+            unlink(Yii::getAlias('@web') . '/uploads/' . $model->logo);
+
+        $model->delete();
         return $this->redirect(['index']);
     }
 

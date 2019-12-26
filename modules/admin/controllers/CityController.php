@@ -5,7 +5,6 @@ namespace app\modules\admin\controllers;
 use Yii;
 use app\models\City;
 use app\models\CitySearch;
-use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -27,25 +26,7 @@ class CityController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
-
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['*'],
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'actions' => ['login', 'signup'],
-                        'roles' => ['?'],
-                    ],
-                    [
-                        'allow' => true,
-                        'actions' => ['index'],
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
         ];
-
     }
 
     /**

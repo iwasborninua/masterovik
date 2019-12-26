@@ -7,6 +7,7 @@ $config = [
     'id' => 'basic',
     'name' => 'Masterovik',
     'basePath' => dirname(__DIR__),
+    'language' => 'ru-RU',
     'bootstrap' => ['log'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
@@ -31,6 +32,11 @@ $config = [
             ],
         ],
 
+        'sms' => [
+            "class"  => 'alexeevdv\sms\ru\Client',
+            "api_id" => "3D03DB92-80ED-7C3D-AE4A-E792076687C2",
+        ],
+
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'M83Zqk1e-4ZKxFrzWhOEO8zIYYn7UQ-7',
@@ -47,13 +53,6 @@ $config = [
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
-        ],
-        'mailer' => [
-            'class' => 'yii\swiftmailer\Mailer',
-            // send all mails to a file by default. You have to set
-            // 'useFileTransport' to false and configure a transport
-            // for the mailer to send real emails.
-            'useFileTransport' => true,
         ],
 
         'log' => [
@@ -74,6 +73,48 @@ $config = [
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/v1/user',
+                    'pluralize' => false,
+                ],
+
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/v1/city',
+                    'pluralize' => false,
+                ],
+
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/v1/service-offered',
+                    'pluralize' => false,
+                ],
+
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/v1/service',
+                    'pluralize' => false,
+                ],
+
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/v1/announcement',
+                    'pluralize' => false,
+                ],
+
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/v1/credit-cards',
+                    'pluralize' => false,
+                ],
+
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/v1/faq',
+                    'pluralize' => false,
+                ],
+
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/v1/rule',
                     'pluralize' => false,
                 ],
             ],

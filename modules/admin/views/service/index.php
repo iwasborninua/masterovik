@@ -7,15 +7,17 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\ServiceSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Services';
+$this->title = 'Услуги';
 $this->params['breadcrumbs'][] = $this->title;
+$url = \yii\helpers\Url::base(http);
+
 ?>
 <div class="service-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+<!--    <h1>--><?//= Html::encode($this->title) ?><!--</h1>-->
 
     <p>
-        <?= Html::a('Create Service', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Создание услуги', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -27,8 +29,21 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
 //            'id',
-            'service_name',
+            'name',
+            [
+                'label' => 'logo',
 
+                'format' => 'html',
+                'value' => function ($data) {
+                    $data->logo != null ? $img = $data->logo: $img = 'default.jpg';
+
+                    return Html::img('@web/uploads/' . $img,
+                        [
+                            'alt' => 'logo',
+                            'style' => 'width:50px'
+                        ]);
+                }
+            ],
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
